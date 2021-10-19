@@ -1,5 +1,5 @@
 {
-    "name": "warblemedia/omnipay-afterpay",
+    "name": "workhouse-advertising/omnipay-afterpay",
     "description": "AfterPay gateway for Omnipay payment processing library",
     "keywords": [
         "omnipay",
@@ -7,14 +7,18 @@
         "gateway",
         "merchant"
     ],
-    "homepage": "https://github.com/warblemedia/omnipay-afterpay",
+    "homepage": "https://github.com/workhouse-advertising/omnipay-afterpay",
     "license": "MIT",
     "authors": [
         {
             "name": "Jeremy Worboys",
             "email": "jw@warblemedia.com.au",
             "homepage": "https://warblemedia.com.au",
-            "role": "Developer"
+            "role": "Original Developer (pre-fork)"
+        },
+        {
+            "name": "Simon Geoghegan",
+            "email": "simon@workhouseadvertising.com.au"
         }
     ],
     "autoload": {
@@ -28,21 +32,13 @@
         }
     },
     "require": {
-        "php": ">=5.3.0",
-        "omnipay/common": "~2.2.0"
+        "php": "^7.2|^8.0",
+        "omnipay/common": "^3.1"
     },
     "require-dev": {
-        "omnipay/tests": "~2.0",
-        "phpunit/phpunit": "~3.7.0",
-        "mockery/mockery": "^0.9.5",
-        "scrutinizer/ocular": "~1.1"
+        "omnipay/tests": "^3|^4"
     },
     "scripts": {
         "test": "phpunit"
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0-dev"
-        }
     }
 }
