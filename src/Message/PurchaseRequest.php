@@ -2,6 +2,7 @@
 
 namespace Omnipay\AfterPay\Message;
 
+use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Exception\InvalidRequestException;
 
 class PurchaseRequest extends AbstractRequest
@@ -166,7 +167,7 @@ class PurchaseRequest extends AbstractRequest
      * @param mixed $data
      * @return \Omnipay\AfterPay\Message\Response
      */
-    protected function createResponse($data)
+    protected function createResponse($data): AbstractResponse
     {
         return new PurchaseResponse($this, $data);
     }

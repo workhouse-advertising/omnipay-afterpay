@@ -2,6 +2,8 @@
 
 namespace Omnipay\AfterPay\Message;
 
+use Omnipay\Common\Message\AbstractResponse;
+
 class CompletePurchaseRequest extends AbstractRequest
 {
     /**
@@ -12,10 +14,10 @@ class CompletePurchaseRequest extends AbstractRequest
      */
     public function getData()
     {
-        return array(
+        return [
             'token'             => $this->httpRequest->get('orderToken'),
             'merchantReference' => $this->getTransactionId(),
-        );
+        ];
     }
 
     /**
@@ -24,5 +26,13 @@ class CompletePurchaseRequest extends AbstractRequest
     public function getEndpoint()
     {
         return parent::getEndpoint() . '/payments/capture';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function createResponse($data): AbstractResponse
+    {
+        return new CompletePurchaseResponse($this, $data);
     }
 }

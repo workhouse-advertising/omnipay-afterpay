@@ -2,6 +2,7 @@
 
 namespace Omnipay\AfterPay\Message;
 
+use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\AbstractRequest as BaseAbstractRequest;
 use Psr\Http\Message\ResponseInterface;
@@ -131,12 +132,9 @@ abstract class AbstractRequest extends BaseAbstractRequest
 
     /**
      * @param mixed $data
-     * @return \Omnipay\AfterPay\Message\Response
+     * @return \Omnipay\Common\Message\AbstractResponse
      */
-    protected function createResponse($data)
-    {
-        return new Response($this, $data);
-    }
+    abstract protected function createResponse($data): AbstractResponse;
 
     /**
      * @return string

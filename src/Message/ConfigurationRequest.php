@@ -2,6 +2,7 @@
 
 namespace Omnipay\AfterPay\Message;
 
+use Omnipay\Common\Message\AbstractResponse;
 use Psr\Http\Message\ResponseInterface;
 
 class ConfigurationRequest extends AbstractRequest
@@ -31,5 +32,13 @@ class ConfigurationRequest extends AbstractRequest
     public function getEndpoint()
     {
         return parent::getEndpoint() . '/configuration';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function createResponse($data): AbstractResponse
+    {
+        return new ConfigurationResponse($this, $data);
     }
 }
