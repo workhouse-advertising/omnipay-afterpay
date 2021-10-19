@@ -14,7 +14,7 @@ class CompletePurchaseRequest extends AbstractRequest
     {
         return array(
             'token'             => $this->httpRequest->get('orderToken'),
-            'merchantReference' => $this->getTransactionReference(),
+            'merchantReference' => $this->getTransactionId(),
         );
     }
 

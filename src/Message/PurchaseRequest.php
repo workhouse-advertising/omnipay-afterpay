@@ -22,29 +22,41 @@ class PurchaseRequest extends AbstractRequest
         $givenNames = $card->getFirstName();
         $surname = $card->getLastName();
 
+        // TODO: Investigate if this is even necessary or if we should just say that first and last
+        //       names are required.
         if (empty($surname) && false !== $pos = strrpos($givenNames, ' ')) {
             $surname = substr($givenNames, $pos + 1);
             $givenNames = substr($givenNames, 0, $pos);
         }
 
+        // TODO: Test if this is still required with the current version of the API.
         // Append fix query param to urls with existing query params as AfterPay appends their
         // data in a way that can break the base url
-        $returnUrl = $this->getReturnUrl();
-        $cancelUrl = $this->getCancelUrl();
+        // $returnUrl = $this->getReturnUrl();
+        // $cancelUrl = $this->getCancelUrl();
 
-        if (strpos($returnUrl, '?') !== false) {
-            $returnUrl .= '&_fix=';
-        }
+        // if (strpos($returnUrl, '?') !== false) {
+        //     $returnUrl .= '&_fix=';
+        // }
 
-        if (strpos($cancelUrl, '?') !== false) {
-            $cancelUrl .= '&_fix=';
-        }
+        // if (strpos($cancelUrl, '?') !== false) {
+        //     $cancelUrl .= '&_fix=';
+        // }
 
         $data = array(
-            'totalAmount'       => array(
+            'amount'       => array(
                 'amount'   => $this->getAmount(),
                 'currency' => $this->getCurrency(),
             ),
+            // TODO: Add support for `taxAmount` and `shippingAmount
+            // 'taxAmount'       => array(
+            //     'amount'   => $this->getAmount(),
+            //     'currency' => $this->getCurrency(),
+            // ),
+            // 'shippingAmount'       => array(
+            //     'amount'   => $this->getAmount(),
+            //     'currency' => $this->getCurrency(),
+            // ),
             'consumer'          => array(
                 'givenNames'  => $givenNames,
                 'surname'     => $surname,
@@ -72,12 +84,14 @@ class PurchaseRequest extends AbstractRequest
                 'phoneNumber' => $card->getShippingPhone(),
             ),
             'items'             => $this->getItemData(),
+            'discounts'         => $this->getDiscountData(),
             'merchant'          => array(
                 // Need to append dummy parameter otherwise AfterPay breaks the hash param on return
-                'redirectConfirmUrl' => $returnUrl,
-                'redirectCancelUrl'  => $cancelUrl,
+                // TODO: Investigate if AfterPay still breaks the hash param on return with the current API version.
+                'redirectConfirmUrl' => $this->getReturnUrl(),
+                'redirectCancelUrl'  => $this->getCancelUrl(),
             ),
-            'merchantReference' => $this->getTransactionReference(),
+            'merchantReference' => $this->getTransactionId(),
         );
 
         return $data;
@@ -95,6 +109,9 @@ class PurchaseRequest extends AbstractRequest
         if ($items !== null) {
             /** @var \Omnipay\Common\ItemInterface $item */
             foreach ($items as $item) {
+                // Skip any discounts.
+                if ($item->getPrice() < 0) continue;
+
                 $itemArray[] = array(
                     'name'     => $item->getName(),
                     'quantity' => $item->getQuantity(),
@@ -110,11 +127,39 @@ class PurchaseRequest extends AbstractRequest
     }
 
     /**
+     * @return array
+     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     */
+    public function getDiscountData()
+    {
+        $items = $this->getItems();
+        $discountsArray = [];
+
+        if ($items !== null) {
+            /** @var \Omnipay\Common\ItemInterface $item */
+            foreach ($items as $item) {
+                // Skip any non-discounts.
+                if ($item->getPrice() >= 0) continue;
+
+                $discountsArray[] = [
+                    'displayName'     => $item->getName(),
+                    'amount'   => [
+                        'amount'   => $this->formatPrice($item->getPrice() * $item->getQuantity()),
+                        'currency' => $this->getCurrency(),
+                    ],
+                ];
+            }
+        }
+
+        return $discountsArray;
+    }
+
+    /**
      * @return string
      */
     public function getEndpoint()
     {
-        return parent::getEndpoint() . '/orders';
+        return parent::getEndpoint() . '/checkouts';
     }
 
     /**
@@ -133,6 +178,7 @@ class PurchaseRequest extends AbstractRequest
      */
     protected function formatPrice($amount)
     {
+        $amount = $amount ?? 0.00;
         if ($amount) {
             if (!is_float($amount) &&
                 $this->getCurrencyDecimalPlaces() > 0 &&
@@ -144,9 +190,8 @@ class PurchaseRequest extends AbstractRequest
                 );
             }
 
-            return $this->formatCurrency($amount);
         }
-
-        return null;
+        
+        return $this->formatCurrency($amount);
     }
 }

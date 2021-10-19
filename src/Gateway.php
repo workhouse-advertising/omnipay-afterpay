@@ -73,7 +73,7 @@ class Gateway extends AbstractGateway
      */
     public function configuration(array $options = array())
     {
-        return $this->createRequest('\Omnipay\AfterPay\Message\ConfigurationRequest', $options);
+        return $this->createRequest(\Omnipay\AfterPay\Message\ConfigurationRequest::class, $options);
     }
 
     /**
@@ -84,7 +84,7 @@ class Gateway extends AbstractGateway
      */
     public function purchase(array $options = array())
     {
-        return $this->createRequest('\Omnipay\AfterPay\Message\PurchaseRequest', $options);
+        return $this->createRequest(\Omnipay\AfterPay\Message\PurchaseRequest::class, $options);
     }
 
     /**
@@ -95,6 +95,6 @@ class Gateway extends AbstractGateway
      */
     public function completePurchase(array $options = array())
     {
-        return $this->createRequest('\Omnipay\AfterPay\Message\CompletePurchaseRequest', $options);
+        return $this->createRequest(\Omnipay\AfterPay\Message\CompletePurchaseRequest::class, $options);
     }
 }
