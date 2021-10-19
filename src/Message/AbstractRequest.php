@@ -88,7 +88,10 @@ abstract class AbstractRequest extends BaseAbstractRequest
 
         $httpResponse = $this->httpClient->request($this->getHttpMethod(), $this->getEndpoint(), $headers, json_encode($data));
         $responseData = json_decode($httpResponse->getBody(), true);
-        if ($httpResponse->getStatusCode() != 200) {
+
+        // NOTE: Any 2xx response is to be considered to be successful, although the documentation at `https://developers.afterpay.com/afterpay-online/reference/create-checkout-1`
+        //       indicates that a 200 is expected, we appear to receive a 201 on success.
+        if ($httpResponse->getStatusCode() < 200 || $httpResponse->getStatusCode() > 299) {
             // TODO: Consider filtering the response body in case it may have sensitive information in there.
             //       Although that _should_ never occur.
             // TODO: Consider adding support for accessing the errors in the body. Perhaps return an AuthorizeResponse with errors?
