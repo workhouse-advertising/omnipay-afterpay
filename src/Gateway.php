@@ -3,9 +3,12 @@
 namespace Omnipay\AfterPay;
 
 use Omnipay\Common\AbstractGateway;
+use Omnipay\AfterPay\Traits\GatewayParameters;
 
 class Gateway extends AbstractGateway
 {
+    use GatewayParameters;
+
     /**
      * @return string
      */
@@ -24,40 +27,6 @@ class Gateway extends AbstractGateway
             'merchantSecret' => '',
             'testMode'       => false,
         );
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMerchantId()
-    {
-        return $this->getParameter('merchantId');
-    }
-
-    /**
-     * @param mixed $value
-     * @return $this
-     */
-    public function setMerchantId($value)
-    {
-        return $this->setParameter('merchantId', $value);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMerchantSecret()
-    {
-        return $this->getParameter('merchantSecret');
-    }
-
-    /**
-     * @param mixed $value
-     * @return $this
-     */
-    public function setMerchantSecret($value)
-    {
-        return $this->setParameter('merchantSecret', $value);
     }
 
     /**
