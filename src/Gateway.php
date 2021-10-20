@@ -25,6 +25,7 @@ class Gateway extends AbstractGateway
         return array(
             'merchantId'     => '',
             'merchantSecret' => '',
+            'userAgent'      => null,
             'testMode'       => false,
         );
     }
