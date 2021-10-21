@@ -145,7 +145,7 @@ class PurchaseRequest extends AbstractRequest
                 $discountsArray[] = [
                     'displayName'     => $item->getName(),
                     'amount'   => [
-                        'amount'   => $this->formatPrice($item->getPrice() * $item->getQuantity()),
+                        'amount'   => ($this->formatPrice($item->getPrice() * $item->getQuantity())) * -1,
                         'currency' => $this->getCurrency(),
                     ],
                 ];

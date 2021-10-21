@@ -18,6 +18,11 @@ abstract class AbstractRequest extends BaseAbstractRequest
     /**
      * @inheritDoc
      */
+    protected $negativeAmountAllowed = true;
+
+    /**
+     * @inheritDoc
+     */
     public function sendData($data)
     {
         $headers = [
