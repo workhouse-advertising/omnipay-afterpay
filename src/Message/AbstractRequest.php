@@ -25,16 +25,9 @@ abstract class AbstractRequest extends BaseAbstractRequest
      */
     public function sendData($data)
     {
-        $headers = [
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-            'Authorization' => $this->buildAuthorizationHeader(),
-            'User-Agent' => $this->buildUserAgentHeader(),
-        ];
-        
         // TODO: Add idempotency support using the `requestId` field.
 
-        $httpResponse = $this->httpClient->request($this->getHttpMethod(), $this->getEndpoint(), $headers, json_encode($data));
+        $httpResponse = $this->httpClient->request($this->getHttpMethod(), $this->getEndpoint(), $this->getHeaders(), json_encode($data));
         $responseData = json_decode($httpResponse->getBody(), true);
 
         // NOTE: Any 2xx response is to be considered to be successful, although the documentation at `https://developers.afterpay.com/afterpay-online/reference/create-checkout-1`
@@ -50,6 +43,19 @@ abstract class AbstractRequest extends BaseAbstractRequest
         return $this->createResponse(
             $this->parseResponseData($httpResponse)
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'Authorization' => $this->buildAuthorizationHeader(),
+            'User-Agent' => $this->buildUserAgentHeader(),
+        ];
     }
 
     /**

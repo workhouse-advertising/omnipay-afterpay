@@ -47,6 +47,17 @@ class Gateway extends AbstractGateway
     }
 
     /**
+     * Fetch a checkout with a given token.
+     *
+     * @param array $options
+     * @return \Omnipay\Common\Message\ResponseInterface
+     */
+    public function getCheckout(array $options = array())
+    {
+        return $this->createRequest(\Omnipay\AfterPay\Message\GetCheckoutRequest::class, $options);
+    }
+
+    /**
      * Authorize and immediately capture an amount on the customers card
      *
      * @param array $options

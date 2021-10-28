@@ -4,13 +4,10 @@ namespace Omnipay\AfterPay\Message;
 
 use Omnipay\Common\Message\AbstractResponse;
 
-class CompletePurchaseRequest extends AbstractRequest
+class GetCheckoutRequest extends AbstractRequest
 {
     /**
-     * Get the raw data array for this message. The format of this varies from gateway to
-     * gateway, but will usually be either an associative array, or a SimpleXMLElement.
-     *
-     * @return mixed
+     * @inheritDoc
      */
     public function getData()
     {
@@ -22,11 +19,28 @@ class CompletePurchaseRequest extends AbstractRequest
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getToken()
+    {
+        $data = $this->getData();
+        return $data['token'] ?? null;
+    }
+
+    /**
      * @return string
      */
     public function getEndpoint()
     {
-        return parent::getEndpoint() . '/payments/capture';
+        return parent::getEndpoint() . "/checkouts/{$this->getToken()}";
+    }
+
+    /**
+     * @return string
+     */
+    public function getHttpMethod()
+    {
+        return 'GET';
     }
 
     /**
@@ -34,6 +48,6 @@ class CompletePurchaseRequest extends AbstractRequest
      */
     protected function createResponse($data): AbstractResponse
     {
-        return new CompletePurchaseResponse($this, $data);
+        return new GetCheckoutResponse($this, $data);
     }
 }
