@@ -95,6 +95,14 @@ class PurchaseRequest extends AbstractRequest
             'merchantReference' => $this->getTransactionId(),
         );
 
+        // Allow empty billing and shipping addresses.
+        if (!isset($data['billing']['line1'])) {
+            unset($data['billing']);
+        }
+        if (!isset($data['shipping']['line1'])) {
+            unset($data['shipping']);
+        }
+
         return $data;
     }
 
